@@ -7,22 +7,25 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <!-- Top-left config button -->
-  <a class="corner-btn left" href="config.html" aria-label="Open config">Config</a>
 
-  <!-- Optional small step button (top-right) -->
-  <button id="stepBtn" class="corner-btn right" type="button" aria-label="Step light">
+  <!-- TOP LEFT: STEP -->
+  <button id="stepBtn" class="corner-btn left" type="button">
     Step
   </button>
 
+  <!-- TOP RIGHT: CONFIG -->
+  <a href="config.html" class="corner-btn right">
+    Config
+  </a>
+
   <main class="wrap">
-    <section class="housing" aria-label="Traffic light">
-      <button class="lamp red"   data-color="red"   aria-label="Red"></button>
-      <button class="lamp amber" data-color="amber" aria-label="Amber"></button>
-      <button class="lamp green" data-color="green" aria-label="Green"></button>
+    <section class="housing">
+      <button class="lamp red"   data-color="red"></button>
+      <button class="lamp amber" data-color="amber"></button>
+      <button class="lamp green" data-color="green"></button>
     </section>
 
-    <p id="status" class="tip">Tap a light or press Step.</p>
+    <p class="tip">Tap a light or press Step</p>
   </main>
 
   <script src="script.js" defer></script>

@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Game Traffic Lights</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <h1>Game Traffic Lights</h1>
+    <p>Click a light to set your current status. Saved locally in your browser.</p>
+  </header>
+
+  <main>
+    <section class="controls">
+      <input id="newGame" type="text" placeholder="Add a game (e.g., Elden Ring)" />
+      <button id="addBtn">Add</button>
+      <button id="resetBtn" class="ghost" title="Clears saved statuses on this device">Reset</button>
+    </section>
+
+    <ul id="list" class="list"></ul>
+  </main>
+
+  <footer>
+    <small>Tip: Green = actively playing, Amber = on hold, Red = dropped / not now.</small>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

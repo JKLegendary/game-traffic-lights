@@ -1,22 +1,24 @@
-const STORAGE_KEY = "trafficLight.selected"; // saves per device/browser
+const STORAGE_KEY = "trafficLight.selected";
 const lamps = Array.from(document.querySelectorAll(".lamp"));
 
 function setOn(color) {
   lamps.forEach(btn => {
     btn.classList.toggle("on", btn.dataset.color === color);
   });
-  localStorage.setItem(STORAGE_KEY, color);
+  try { localStorage.setItem(STORAGE_KEY, color); } catch {}
 }
 
 function loadInitial() {
-  const saved = localStorage.getItem(STORAGE_KEY);
-  if (saved && lamps.some(b => b.dataset.color === saved)) return saved;
-  return "red"; // default
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved && lamps.some(b => b.dataset.color === saved)) return saved;
+  } catch {}
+  return "red";
 }
 
 lamps.forEach(btn => {
   btn.addEventListener("click", () => setOn(btn.dataset.color));
 });
 
-// init
+// Start with saved (or red)
 setOn(loadInitial());

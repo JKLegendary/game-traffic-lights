@@ -1,62 +1,217 @@
-/* CORNER BUTTONS */
+:root{
+  --bg: #0a0d12;
+  --text: rgba(255,255,255,.75);
+  --edge: rgba(255,255,255,.14);
+
+  --red:   #ff2d2d;
+  --amber: #ffb300;
+  --green: #2ee86f;
+}
+
+*{ box-sizing: border-box; }
+
+body{
+  margin: 0;
+  min-height: 100vh;
+  background: radial-gradient(900px 600px at 50% 15%, rgba(255,255,255,.08), transparent 55%), var(--bg);
+  display: grid;
+  place-items: center;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color: white;
+}
+
+/* Layout */
+.wrap{
+  display: grid;
+  gap: 14px;
+  justify-items: center;
+  padding: 18px;
+}
+
+/* Corner buttons */
 .corner-btn{
   position: fixed;
   top: 12px;
   padding: 10px 12px;
   border-radius: 12px;
-  border: 1px solid rgba(255,255,255,.2);
-  background: rgba(255,255,255,.1);
-  color: white;
+  border: 1px solid var(--edge);
+  background: rgba(255,255,255,.10);
+  color: rgba(255,255,255,.92);
   text-decoration: none;
   cursor: pointer;
-  font-size: 14px;
+  -webkit-tap-highlight-color: transparent;
+  backdrop-filter: blur(8px);
 }
+.corner-btn:hover{ background: rgba(255,255,255,.16); }
 
 .corner-btn.left{ left: 12px; }
 .corner-btn.right{ right: 12px; }
 
-/* TRAFFIC LIGHT */
-body{
-  margin: 0;
-  min-height: 100vh;
-  background: #0a0d12;
-  display: grid;
-  place-items: center;
-  font-family: system-ui, sans-serif;
-}
-
-.wrap{
-  display: grid;
-  gap: 14px;
-  justify-items: center;
-}
-
+/* Traffic light housing */
 .housing{
-  width: 220px;
-  padding: 18px;
-  background: #111;
+  width: min(230px, 80vw);
+  padding: 18px 16px;
   border-radius: 28px;
+  background: linear-gradient(180deg, #151a22, #0b0e13);
+  border: 2px solid rgba(255,255,255,.18);
+  box-shadow:
+    0 18px 40px rgba(0,0,0,.55),
+    inset 0 1px 0 rgba(255,255,255,.06);
   display: grid;
   gap: 14px;
 }
 
+/* Lamps (real traffic light look) */
 .lamp{
   width: 100%;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  opacity: .25;
-  border: none;
+  aspect-ratio: 1 / 1;
+  border-radius: 999px;
+  border: 2px solid rgba(255,255,255,.10);
+
+  background:
+    radial-gradient(circle at 35% 30%, rgba(255,255,255,.18), rgba(255,255,255,.02) 45%),
+    rgba(255,255,255,.06);
+
+  box-shadow:
+    inset 0 -18px 28px rgba(0,0,0,.55),
+    inset 0 10px 18px rgba(255,255,255,.06);
+
+  opacity: .28;
+  cursor: pointer;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform .08s ease, opacity .12s ease, box-shadow .12s ease, background .12s ease;
 }
 
-.red{ background: #ff2d2d; }
-.amber{ background: #ffb300; }
-.green{ background: #2ee86f; }
+.lamp:active{ transform: scale(.985); }
 
-.lamp.on{
-  opacity: 1;
-  box-shadow: 0 0 30px currentColor;
+/* off tint */
+.lamp.red   { background-color: rgba(255,45,45,.18); }
+.lamp.amber { background-color: rgba(255,179,0,.18); }
+.lamp.green { background-color: rgba(46,232,111,.18); }
+
+/* on */
+.lamp.on{ opacity: 1; border-color: rgba(255,255,255,.18); }
+
+.lamp.red.on{
+  background:
+    radial-gradient(circle at 35% 30%, rgba(255,255,255,.40), rgba(255,255,255,.08) 38%),
+    radial-gradient(circle at 50% 60%, rgba(255,45,45,1), rgba(255,45,45,.35) 60%, rgba(0,0,0,0) 72%);
+  box-shadow:
+    0 0 28px rgba(255,45,45,.55),
+    0 0 70px rgba(255,45,45,.28),
+    inset 0 -18px 28px rgba(0,0,0,.35),
+    inset 0 10px 18px rgba(255,255,255,.10);
 }
 
+.lamp.amber.on{
+  background:
+    radial-gradient(circle at 35% 30%, rgba(255,255,255,.40), rgba(255,255,255,.08) 38%),
+    radial-gradient(circle at 50% 60%, rgba(255,179,0,1), rgba(255,179,0,.35) 60%, rgba(0,0,0,0) 72%);
+  box-shadow:
+    0 0 28px rgba(255,179,0,.55),
+    0 0 70px rgba(255,179,0,.28),
+    inset 0 -18px 28px rgba(0,0,0,.35),
+    inset 0 10px 18px rgba(255,255,255,.10);
+}
+
+.lamp.green.on{
+  background:
+    radial-gradient(circle at 35% 30%, rgba(255,255,255,.40), rgba(255,255,255,.08) 38%),
+    radial-gradient(circle at 50% 60%, rgba(46,232,111,1), rgba(46,232,111,.35) 60%, rgba(0,0,0,0) 72%);
+  box-shadow:
+    0 0 28px rgba(46,232,111,.55),
+    0 0 70px rgba(46,232,111,.28),
+    inset 0 -18px 28px rgba(0,0,0,.35),
+    inset 0 10px 18px rgba(255,255,255,.10);
+}
+
+/* Tip text */
 .tip{
-  color: rgba(255,255,255,.7);
+  margin: 0;
+  color: var(--text);
+  font-size: 14px;
+  text-align: center;
+  max-width: 340px;
+}
+
+/* Mini traffic-light STEP button */
+.mini-step{
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  width: 54px;
+  height: 74px;
+  padding: 10px 10px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.20);
+  background: linear-gradient(180deg, #171b24, #0b0e13);
+  box-shadow: 0 12px 26px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.06);
+  display: grid;
+  gap: 6px;
+  justify-items: center;
+  align-content: center;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.mini-step:active{ transform: scale(.99); }
+
+.mini-bulb{
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  opacity: .25;
+  box-shadow: inset 0 -6px 10px rgba(0,0,0,.5);
+}
+
+.mini-red{ background: var(--red); }
+.mini-amber{ background: var(--amber); }
+.mini-green{ background: var(--green); }
+
+.mini-step.is-red .mini-red,
+.mini-step.is-amber .mini-amber,
+.mini-step.is-green .mini-green{
+  opacity: 1;
+}
+
+/* Config page panel */
+.panel{
+  width: min(420px, 92vw);
+  padding: 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.16);
+  background: rgba(15,18,24,.80);
+  backdrop-filter: blur(10px);
+  display: grid;
+  gap: 12px;
+}
+
+.panel-title{
+  margin: 0 0 6px 0;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.row{
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: center;
+  font-size: 14px;
+}
+
+.small, select{
+  padding: 8px 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.16);
+  background: rgba(255,255,255,.10);
+  color: rgba(255,255,255,.92);
+  cursor: pointer;
+}
+
+.panel-note{
+  margin: 6px 0 0;
+  color: rgba(255,255,255,.70);
+  font-size: 13px;
+  line-height: 1.3;
 }

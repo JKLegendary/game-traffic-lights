@@ -7,6 +7,36 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <!-- Top-left: Step button -->
+  <button id="stepBtn" class="corner-btn left" aria-label="Step traffic light">
+    Step
+  </button>
+
+  <!-- Top-right: Control panel -->
+  <section class="panel" aria-label="Controls">
+    <label class="row">
+      <input id="autoToggle" type="checkbox" />
+      <span>Auto</span>
+    </label>
+
+    <label class="row">
+      <span>Speed</span>
+      <select id="speedSelect" aria-label="Automatic speed">
+        <option value="500">Fast</option>
+        <option value="900" selected>Normal</option>
+        <option value="1400">Slow</option>
+        <option value="2000">Very slow</option>
+      </select>
+    </label>
+
+    <label class="row">
+      <span>Direction</span>
+      <button id="dirBtn" class="small" type="button" aria-label="Toggle direction">
+        Forward
+      </button>
+    </label>
+  </section>
+
   <main class="wrap">
     <section class="housing" aria-label="Traffic light">
       <button class="lamp red" data-color="red" aria-label="Red"></button>
@@ -14,7 +44,7 @@
       <button class="lamp green" data-color="green" aria-label="Green"></button>
     </section>
 
-    <p class="tip">Tap a light.</p>
+    <p class="tip">Tap a light, or use Step / Auto.</p>
   </main>
 
   <script src="script.js"></script>

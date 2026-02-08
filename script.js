@@ -3,19 +3,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const stepBtn = document.getElementById("stepBtn");
 
   // storage keys
-  const KEY_LIGHT = "light";
-  const KEY_AUTO  = "auto";
-  const KEY_SPEED = "speed";
-  const KEY_DIR   = "dir";      // config auto direction (forward|reverse)
-  const KEY_STEP_DIR = "stepDir"; // step button direction (forward|reverse)
-
-  // auto sequences (if you use auto)
-  const SEQ_FORWARD = ["red", "amber", "green", "amber"];   // loop
-  const SEQ_REVERSE = ["green", "amber", "red", "amber"];   // loop
+  const KEY_LIGHT    = "light";      // "red" | "amber" | "green"
+  const KEY_AUTO     = "auto";       // "true" | "false"
+  const KEY_SPEED    = "speed";      // ms
+  const KEY_DIR      = "dir";        // "forward" | "reverse"
+  const KEY_AMBER_TO = "amberTo";    // where amber should go next: "red" | "green"
 
   let timer = null;
 
-  function getCurrent() {
+  function getLight() {
     const on = lamps.find(b => b.classList.contains("on"));
     return on ? on.dataset.color : (localStorage.getItem(KEY_LIGHT) || "red");
   }
@@ -24,11 +20,85 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.setItem(KEY_LIGHT, color);
     lamps.forEach(btn => btn.classList.toggle("on", btn.dataset.color === color));
 
-    // update mini-step button highlight if present
+    // mini step button highlight (if using it)
     if (stepBtn) {
       stepBtn.classList.remove("is-red", "is-amber", "is-green");
       stepBtn.classList.add(`is-${color}`);
     }
+  }
+
+  function dir() {
+    return (localStorage.getItem(KEY_DIR) === "reverse") ? "reverse" : "forward";
+  }
+
+  function setAmberTo(target) {
+    localStorage.setItem(KEY_AMBER_TO, target === "red" ? "red" : "green");
+  }
+
+  function amberTo() {
+    const v = localStorage.getItem(KEY_AMBER_TO);
+    return (v === "red" || v === "green") ? v : (dir() === "reverse" ? "red" : "green");
+  }
+
+  // ---------- AUTO: proper state machine (no indexOf, no duplicates bug) ----------
+  function autoAdvanceOneState() {
+    const current = getLight();
+    const d = dir();
+
+    // ensure amber knows where it's heading next
+    if (current === "red") setAmberTo("green");
+    if (current === "green") setAmberTo("red");
+
+    if (current === "red") {
+      setLight("amber");
+    } else if (current === "green") {
+      setLight("amber");
+    } else { // amber
+      // amber goes to the remembered endpoint
+      setLight(amberTo());
+    }
+  }
+
+  function startOrStopAuto() {
+    if (timer) {
+      clearInterval(timer);
+      timer = null;
+    }
+    const isAuto = localStorage.getItem(KEY_AUTO) === "true";
+    if (!isAuto) return;
+
+    const speed = Number(localStorage.getItem(KEY_SPEED)) || 900;
+    timer = setInterval(autoAdvanceOneState, speed);
+  }
+
+  // ---------- STEP: jump TWO states ----------
+  // What you want:
+  // - forward jump: red -> green (skipping amber stop)
+  // - reverse jump: green -> red (skipping amber stop)
+  // - if on amber: go to the endpoint for the current direction/memory
+  function stepJumpTwo() {
+    const current = getLight();
+    const d = dir();
+
+    // Keep amber memory sane
+    if (current === "red") setAmberTo("green");
+    if (current === "green") setAmberTo("red");
+
+    if (current === "amber") {
+      // on amber, a "2-step" jump really just means go to the endpoint
+      setLight(amberTo());
+      return;
+    }
+
+    // From red or green, do two transitions instantly:
+    // red -> amber -> green OR green -> amber -> red
+    setLight("amber");
+
+    // next tick immediately to endpoint
+    const endpoint = (current === "red") ? "green" : "red";
+    // lock memory so auto remains consistent afterwards
+    setAmberTo(endpoint);
+    setLight(endpoint);
   }
 
   function stopAuto() {
@@ -39,67 +109,26 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.setItem(KEY_AUTO, "false");
   }
 
-  function autoTick() {
-    const current = getCurrent();
-    const dir = localStorage.getItem(KEY_DIR) || "forward";
-    const seq = (dir === "reverse") ? SEQ_REVERSE : SEQ_FORWARD;
-
-    const i = seq.indexOf(current);
-    const next = seq[(i === -1 ? 0 : (i + 1) % seq.length)];
-    setLight(next);
-  }
-
-  function startOrStopAuto() {
-    if (timer) {
-      clearInterval(timer);
-      timer = null;
-    }
-    const auto = localStorage.getItem(KEY_AUTO) === "true";
-    if (!auto) return;
-
-    const speed = Number(localStorage.getItem(KEY_SPEED)) || 900;
-    timer = setInterval(autoTick, speed);
-  }
-
-  // Tap lamps = manual override (also stops auto so it doesn't fight you)
+  // Tap lamps = manual set (and stop auto so it doesn't fight)
   lamps.forEach(btn => {
     btn.addEventListener("click", () => {
       stopAuto();
-      setLight(btn.dataset.color);
+      const c = btn.dataset.color;
+      setLight(c);
 
-      // set step direction based on what you chose
-      if (btn.dataset.color === "red") localStorage.setItem(KEY_STEP_DIR, "forward");
-      if (btn.dataset.color === "green") localStorage.setItem(KEY_STEP_DIR, "reverse");
+      // set amber memory based on endpoints
+      if (c === "red") setAmberTo("green");
+      if (c === "green") setAmberTo("red");
     });
   });
 
-  // ✅ STEP BUTTON: EXACT BEHAVIOR YOU DESCRIBED
-  // Red -> Amber -> Green (forward)
-  // Green -> Amber -> Red (reverse)
-  // Amber continues whichever direction you were going last
-  stepBtn.addEventListener("click", () => {
-    stopAuto(); // stop auto so step is consistent
-
-    const current = getCurrent();
-
-    // If you're at an end, force direction
-    if (current === "red") localStorage.setItem(KEY_STEP_DIR, "forward");
-    if (current === "green") localStorage.setItem(KEY_STEP_DIR, "reverse");
-
-    const stepDir = localStorage.getItem(KEY_STEP_DIR) || "forward";
-
-    if (current === "red") {
-      setLight("amber");
-    } else if (current === "amber") {
-      setLight(stepDir === "forward" ? "green" : "red");
-    } else if (current === "green") {
-      setLight("amber");
-    } else {
-      // fallback
-      setLight("red");
-      localStorage.setItem(KEY_STEP_DIR, "forward");
-    }
-  });
+  // Step button = do the 2-step jump (also stop auto so it doesn't interfere)
+  if (stepBtn) {
+    stepBtn.addEventListener("click", () => {
+      stopAuto();
+      stepJumpTwo();
+    });
+  }
 
   // react to config changes (auto settings)
   window.addEventListener("storage", (e) => {
@@ -109,9 +138,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // init
   const initial = localStorage.getItem(KEY_LIGHT) || "red";
-  if (!localStorage.getItem(KEY_STEP_DIR)) {
-    localStorage.setItem(KEY_STEP_DIR, initial === "green" ? "reverse" : "forward");
-  }
   setLight(initial);
+  if (initial === "red") setAmberTo("green");
+  if (initial === "green") setAmberTo("red");
   startOrStopAuto();
 });

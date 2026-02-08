@@ -1,133 +1,99 @@
-:root {
+:root{
   --bg: #0b0f14;
-  --card: #121924;
+  --panel: #151c28;
+  --ring: rgba(255,255,255,.14);
   --text: #e7eefc;
-  --muted: #9db0d4;
 
-  --red: #ff4d4d;
+  --red:   #ff3b30;
   --amber: #ffb020;
-  --green: #2bd576;
-
-  --ring: rgba(231, 238, 252, 0.15);
+  --green: #34c759;
 }
 
-* { box-sizing: border-box; }
+*{ box-sizing: border-box; }
 
-body {
+body{
   margin: 0;
+  min-height: 100vh;
+  background: radial-gradient(900px 500px at 50% -10%, rgba(255,255,255,.08), transparent 55%), var(--bg);
+  color: var(--text);
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  background: radial-gradient(1200px 600px at 20% -10%, rgba(43, 213, 118, 0.12), transparent 50%),
-              radial-gradient(900px 500px at 90% 0%, rgba(255, 176, 32, 0.10), transparent 55%),
-              radial-gradient(900px 500px at 40% 110%, rgba(255, 77, 77, 0.10), transparent 55%),
-              var(--bg);
-  color: var(--text);
-}
-
-header, main, footer {
-  width: min(900px, 92vw);
-  margin: 0 auto;
-}
-
-header { padding: 28px 0 10px; }
-h1 { margin: 0 0 6px; font-size: 28px; }
-p { margin: 0; color: var(--muted); }
-
-.controls {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  margin: 18px 0;
-}
-
-input {
-  flex: 1;
-  padding: 12px 12px;
-  border-radius: 12px;
-  border: 1px solid var(--ring);
-  background: rgba(18, 25, 36, 0.8);
-  color: var(--text);
-  outline: none;
-}
-
-button {
-  padding: 12px 14px;
-  border-radius: 12px;
-  border: 1px solid var(--ring);
-  background: rgba(231, 238, 252, 0.08);
-  color: var(--text);
-  cursor: pointer;
-}
-
-button:hover { background: rgba(231, 238, 252, 0.14); }
-
-button.ghost {
-  background: transparent;
-  color: var(--muted);
-}
-
-.list {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 26px;
   display: grid;
-  gap: 10px;
+  place-items: center;
+  padding: 18px;
 }
 
-.item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: rgba(18, 25, 36, 0.85);
+.wrap{
+  width: min(420px, 92vw);
+  display: grid;
+  gap: 14px;
+  justify-items: center;
+}
+
+.title{
+  margin: 0;
+  font-size: 22px;
+  letter-spacing: .2px;
+}
+
+.housing{
+  width: min(260px, 80vw);
+  padding: 18px;
+  background: rgba(21, 28, 40, 0.9);
   border: 1px solid var(--ring);
-  border-radius: 14px;
-  padding: 14px 14px;
+  border-radius: 22px;
+  display: grid;
+  gap: 14px;
 }
 
-.name {
-  font-weight: 600;
-  letter-spacing: 0.2px;
-}
-
-.lights {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.light {
-  width: 18px;
-  height: 18px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,0.18);
-  opacity: 0.35;
+.lamp{
+  appearance: none;
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 16px;
+  height: 90px;
+  width: 100%;
+  background: rgba(255,255,255,.06);
   cursor: pointer;
-  box-shadow: 0 0 0 0 rgba(255,255,255,0);
-  transition: opacity 0.12s ease, transform 0.12s ease, box-shadow 0.12s ease;
+  position: relative;
+  outline: none;
+  transition: transform .08s ease, box-shadow .15s ease, filter .15s ease, opacity .15s ease;
+  opacity: .35;
 }
 
-.light:hover { transform: scale(1.06); opacity: 0.6; }
+.lamp:active{ transform: scale(.99); }
 
-.light.red { background: var(--red); }
-.light.amber { background: var(--amber); }
-.light.green { background: var(--green); }
+.lamp.red   { background: color-mix(in srgb, var(--red)   18%, rgba(255,255,255,.06)); }
+.lamp.amber { background: color-mix(in srgb, var(--amber) 18%, rgba(255,255,255,.06)); }
+.lamp.green { background: color-mix(in srgb, var(--green) 18%, rgba(255,255,255,.06)); }
 
-.light.active {
+/* ON state */
+.lamp.on{
   opacity: 1;
-  box-shadow: 0 0 0 6px rgba(255,255,255,0.06);
+  filter: saturate(1.15) brightness(1.05);
+  box-shadow:
+    0 0 0 6px rgba(255,255,255,.05),
+    0 0 28px 6px rgba(255,255,255,.06);
 }
 
-.actions {
-  display: flex;
-  gap: 10px;
-  align-items: center;
+/* Color glow per light */
+.lamp.red.on{
+  box-shadow:
+    0 0 0 6px rgba(255,255,255,.05),
+    0 0 40px 10px color-mix(in srgb, var(--red) 60%, transparent);
+}
+.lamp.amber.on{
+  box-shadow:
+    0 0 0 6px rgba(255,255,255,.05),
+    0 0 40px 10px color-mix(in srgb, var(--amber) 60%, transparent);
+}
+.lamp.green.on{
+  box-shadow:
+    0 0 0 6px rgba(255,255,255,.05),
+    0 0 40px 10px color-mix(in srgb, var(--green) 60%, transparent);
 }
 
-.delete {
-  color: var(--muted);
-  background: transparent;
-}
-
-footer {
-  padding: 12px 0 28px;
-  color: var(--muted);
+.tip{
+  margin: 0;
+  opacity: .7;
+  font-size: 13px;
+  text-align: center;
 }

@@ -8,24 +8,24 @@
 </head>
 <body>
 
-  <!-- TOP LEFT: STEP -->
-  <button id="stepBtn" class="corner-btn left" type="button">
-    Step
+  <!-- TOP LEFT: STEP (mini traffic light button) -->
+  <button id="stepBtn" class="mini-step left" type="button" aria-label="Step red to green or green to red">
+    <span class="mini-bulb mini-red"></span>
+    <span class="mini-bulb mini-amber"></span>
+    <span class="mini-bulb mini-green"></span>
   </button>
 
   <!-- TOP RIGHT: CONFIG -->
-  <a href="config.html" class="corner-btn right">
-    Config
-  </a>
+  <a href="config.html" class="corner-btn right" aria-label="Open config">Config</a>
 
   <main class="wrap">
-    <section class="housing">
-      <button class="lamp red"   data-color="red"></button>
-      <button class="lamp amber" data-color="amber"></button>
-      <button class="lamp green" data-color="green"></button>
+    <section class="housing" aria-label="Traffic light">
+      <button class="lamp red"   data-color="red"   aria-label="Red light"></button>
+      <button class="lamp amber" data-color="amber" aria-label="Amber light"></button>
+      <button class="lamp green" data-color="green" aria-label="Green light"></button>
     </section>
 
-    <p class="tip">Tap a light or press Step</p>
+    <p class="tip">Tap a light. Step jumps Red↔Green. Auto runs if enabled in Config.</p>
   </main>
 
   <script src="script.js" defer></script>

@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
     stepping = true;
 
     const current = getLight();
-    const AMBER_DELAY = 220; // ms (adjust if you want)
+    const AMBER_DELAY = 2000; // ms (adjust if you want)
 
     if (current === "red") {
       setAmberTo("green");

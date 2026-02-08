@@ -2,29 +2,22 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Game Traffic Lights</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Traffic Light</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <header>
-    <h1>Game Traffic Lights</h1>
-    <p>Click a light to set your current status. Saved locally in your browser.</p>
-  </header>
+  <main class="wrap">
+    <h1 class="title">Traffic Light</h1>
 
-  <main>
-    <section class="controls">
-      <input id="newGame" type="text" placeholder="Add a game (e.g., Elden Ring)" />
-      <button id="addBtn">Add</button>
-      <button id="resetBtn" class="ghost" title="Clears saved statuses on this device">Reset</button>
+    <section class="housing" aria-label="Traffic light controller">
+      <button class="lamp red"   data-color="red"   aria-label="Red light"></button>
+      <button class="lamp amber" data-color="amber" aria-label="Amber light"></button>
+      <button class="lamp green" data-color="green" aria-label="Green light"></button>
     </section>
 
-    <ul id="list" class="list"></ul>
+    <p class="tip">Tap a light. (Saved on this device.)</p>
   </main>
-
-  <footer>
-    <small>Tip: Green = actively playing, Amber = on hold, Red = dropped / not now.</small>
-  </footer>
 
   <script src="script.js"></script>
 </body>

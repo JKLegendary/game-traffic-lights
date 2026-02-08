@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Traffic Light Config</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <a href="index.html" class="corner-btn left">← Back</a>
+
+  <main class="wrap">
+    <section class="panel">
+      <h2>Configuration</h2>
+
+      <label class="row">
+        <span>Auto mode</span>
+        <input id="autoToggle" type="checkbox">
+      </label>
+
+      <label class="row">
+        <span>Speed</span>
+        <select id="speedSelect">
+          <option value="500">Fast</option>
+          <option value="1000" selected>Normal</option>
+          <option value="1500">Slow</option>
+        </select>
+      </label>
+
+      <label class="row">
+        <span>Direction</span>
+        <button id="dirBtn" type="button">Forward</button>
+      </label>
+    </section>
+  </main>
+
+  <script src="config.js" defer></script>
+</body>
+</html>
